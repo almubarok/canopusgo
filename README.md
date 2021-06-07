@@ -2,6 +2,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/almubarok/canopusgo)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/almubarok/canopusgo)
 ![GitHub all releases](https://img.shields.io/github/downloads/almubarok/canopusgo/total)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/almubarok/canopusgo)
 
 ## Overview
 
