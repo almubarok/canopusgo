@@ -33,4 +33,4 @@ func (cano *Canopus) GetAvailableMethod(amount float64) ([]PaymentMethod, error)
 func (cano *Canopus) GenerateCart(payload CartPayload, paymentMethod PaymentMethod) (CartResponse, error)
 ```
 
-Check some examples [canopusgo](https://github.com/almubarok/canopusgo/examples)
+Check some examples [canopusgo](https://github.com/almubarok/canopusgo/tree/main/examples)
