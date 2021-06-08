@@ -146,3 +146,13 @@ type Callback struct {
 	} `json:"request"`
 	Signature string `json:"signature"`
 }
+
+// InitService to create canoput service
+type InitService struct {
+	Type        string // snap | api
+	MerchantKey []byte
+	MerchantPem []byte
+	MerchantID  string
+	Secret      string
+	TimeOut     time.Duration
+}

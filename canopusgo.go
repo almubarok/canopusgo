@@ -27,15 +27,39 @@ type Canopus struct {
 }
 
 // TODO: create validation in parameter for each function
-func CreateService(Type string, MerchantKey []byte, MerchantPem []byte, MerchantID string, Secret string, Client *http.Client) *Canopus {
-	return &Canopus{
-		Type:        Type,
-		MerchantKey: MerchantKey,
-		MerchantPem: MerchantPem,
-		MerchantID:  MerchantID,
-		Secret:      Secret,
-		Client:      Client,
+func CreateService(init InitService) (*Canopus, error) {
+	if len(init.MerchantPem) == 0 {
+		return &Canopus{}, errors.New("field MerchantPem cannot empty")
 	}
+	if len(init.MerchantKey) == 0 {
+		return &Canopus{}, errors.New("field MerchantKey cannot empty")
+	}
+	if init.MerchantID == "" {
+		return &Canopus{}, errors.New("field MerchantID cannot empty")
+	}
+	if init.Secret == "" {
+		return &Canopus{}, errors.New("field Secret cannot empty")
+	}
+
+	canType := DefaultType
+	timeout := DefaultDuration
+
+	if init.Type != "" {
+		canType = init.Type
+	}
+	if init.TimeOut != 0 {
+		timeout = init.TimeOut
+	}
+
+	client := &http.Client{Timeout: timeout}
+	return &Canopus{
+		Type:        canType,
+		MerchantKey: init.MerchantKey,
+		MerchantPem: init.MerchantPem,
+		MerchantID:  init.MerchantID,
+		Secret:      init.Secret,
+		Client:      client,
+	}, nil
 }
 
 // GenerateSignature ...

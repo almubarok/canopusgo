@@ -3,7 +3,6 @@ package examples
 import (
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"time"
 
 	"github.com/almubarok/canopusgo"
@@ -18,9 +17,19 @@ func GetToken() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	client := &http.Client{Timeout: time.Second * time.Duration(60)}
 
-	cano := canopusgo.CreateService("snap", privKey, privPem, "M-0001", "yoursecret", client)
+	timeout := time.Second * time.Duration(60)
+
+	cano, err := canopusgo.CreateService(canopusgo.InitService{
+		MerchantKey: privKey,
+		MerchantPem: privPem,
+		TimeOut:     timeout,
+		MerchantID:  "M-0001",
+		Secret:      "yoursecret",
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	res, err := cano.GetToken()
 	if err != nil {
