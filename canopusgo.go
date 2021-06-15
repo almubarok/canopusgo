@@ -14,6 +14,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	validator "github.com/go-playground/validator/v10"
 )
 
 type Canopus struct {
@@ -24,21 +26,16 @@ type Canopus struct {
 	Secret      string
 	Client      *http.Client
 	Token       string
+	Validator   *validator.Validate
 }
 
 // TODO: create validation in parameter for each function
 func CreateService(init InitService) (*Canopus, error) {
-	if len(init.MerchantPem) == 0 {
-		return &Canopus{}, errors.New("field MerchantPem cannot empty")
-	}
-	if len(init.MerchantKey) == 0 {
-		return &Canopus{}, errors.New("field MerchantKey cannot empty")
-	}
-	if init.MerchantID == "" {
-		return &Canopus{}, errors.New("field MerchantID cannot empty")
-	}
-	if init.Secret == "" {
-		return &Canopus{}, errors.New("field Secret cannot empty")
+	validate := validator.New()
+
+	err := validate.Struct(init)
+	if err != nil {
+		return &Canopus{}, err
 	}
 
 	canType := DefaultType
@@ -59,6 +56,7 @@ func CreateService(init InitService) (*Canopus, error) {
 		MerchantID:  init.MerchantID,
 		Secret:      init.Secret,
 		Client:      client,
+		Validator:   validate,
 	}, nil
 }
 
@@ -201,6 +199,16 @@ func (cano *Canopus) GetAvailableMethod(amount float64) ([]PaymentMethod, error)
 
 func (cano *Canopus) GenerateCart(payload CartPayload, paymentMethod PaymentMethod) (CartResponse, error) {
 	var url string
+
+	err := cano.Validator.Struct(payload)
+	if err != nil {
+		return CartResponse{}, err
+	}
+
+	err = cano.Validator.Struct(paymentMethod)
+	if err != nil {
+		return CartResponse{}, err
+	}
 
 	if cano.Type == "snap" {
 		url = fmt.Sprintf("%v/api/v1/merchants/%v/%v", BaseURL, cano.MerchantID, "snap/cart")
