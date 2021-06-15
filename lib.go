@@ -13,16 +13,21 @@ import (
 
 func ValidateResponse(resp []byte) (CommonMessage, error) {
 	var response CommonMessage
-	var err error
 
-	err = json.Unmarshal(resp, &response)
+	err := json.Unmarshal(resp, &response)
 	if err != nil {
 		return CommonMessage{}, err
 	}
 
-	if response.Response.Result.Code != "00000000" {
-		err = errors.New(response.Response.Result.Code + " " + response.Response.Result.Message)
-		return CommonMessage{}, err
+	switch response.Response.Result.Code {
+	case "00000002":
+		return CommonMessage{}, Err002
+	case "00000004":
+		return CommonMessage{}, Err004
+	case "00000007":
+		return CommonMessage{}, Err007
+	case "00000008":
+		return CommonMessage{}, Err008
 	}
 
 	return response, nil
