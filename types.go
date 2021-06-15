@@ -41,9 +41,9 @@ type NotifData struct {
 
 // PaymentMethod payment method available
 type PaymentMethod struct {
-	Key         string      `json:"key"`
+	Key         string      `json:"key" validate:"required"`
 	Name        string      `json:"name"`
-	Type        string      `json:"type"`
+	Type        string      `json:"type" validate:"required"`
 	Logo        string      `json:"logo"`
 	Instruction interface{} `json:"instruction"`
 }
@@ -51,22 +51,22 @@ type PaymentMethod struct {
 // CartPayload payload to create cart
 type CartPayload struct {
 	CartDetails struct {
-		ID      string `json:"id"`
+		ID      string `json:"id" validate:"required"`
 		Payment struct {
 			Key  string `json:"key"`
 			Type string `json:"type"`
 		} `json:"payment"`
-		Amount    float64 `json:"amount"`
-		Title     string  `json:"title"`
-		Currency  string  `json:"currency"`
-		ExpiredAt string  `json:"expiredAt"`
-	} `json:"cartDetails"`
-	ItemDetails     []CartPayloadItemDetail `json:"itemDetails"`
+		Amount    float64 `json:"amount" validate:"required"`
+		Title     string  `json:"title" validate:"required"`
+		Currency  string  `json:"currency" validate:"required"`
+		ExpiredAt string  `json:"expiredAt" validate:"required"`
+	} `json:"cartDetails" validate:"required"`
+	ItemDetails     []CartPayloadItemDetail `json:"itemDetails" validate:"required"`
 	CustomerDetails struct {
-		FirstName      string `json:"firstName"`
+		FirstName      string `json:"firstName" validate:"required"`
 		LastName       string `json:"lastName"`
-		Email          string `json:"email"`
-		Phone          string `json:"phone"`
+		Email          string `json:"email" validate:"required"`
+		Phone          string `json:"phone" validate:"required"`
 		BillingAddress struct {
 			FirstName  string `json:"firstName"`
 			LastName   string `json:"lastName"`
@@ -83,7 +83,7 @@ type CartPayload struct {
 			City       string `json:"city"`
 			PostalCode string `json:"postalCode"`
 		} `json:"shippingAddress"`
-	} `json:"customerDetails"`
+	} `json:"customerDetails" validate:"required"`
 	Environment struct {
 		Agent   string `json:"agent"`
 		Mode    string `json:"mode"`
@@ -91,10 +91,10 @@ type CartPayload struct {
 		Version string `json:"version"`
 	} `json:"environment"`
 	URL struct {
-		ReturnURL       string `json:"returnURL"`
-		CancelURL       string `json:"cancelURL"`
-		NotificationURL string `json:"notificationURL"`
-	} `json:"url"`
+		ReturnURL       string `json:"returnURL" validate:"required"`
+		CancelURL       string `json:"cancelURL" validate:"required"`
+		NotificationURL string `json:"notificationURL" validate:"required"`
+	} `json:"url" validate:"required"`
 	ExtendInfo struct {
 		AdditionalPrefix string `json:"additionalPrefix"`
 	} `json:"extendInfo"`
@@ -102,11 +102,11 @@ type CartPayload struct {
 
 // CartPayloadItemDetail item cart detail
 type CartPayloadItemDetail struct {
-	Name           string  `json:"name"`
+	Name           string  `json:"name" validate:"required"`
 	Desc           string  `json:"desc"`
-	Price          float64 `json:"price"`
-	Quantity       int     `json:"quantity"`
-	SKU            string  `json:"SKU"`
+	Price          float64 `json:"price" validate:"required"`
+	Quantity       int     `json:"quantity" validate:"required"`
+	SKU            string  `json:"SKU" validate:"required"`
 	AdditionalInfo struct {
 		NoHandphone string `json:"No Handphone"`
 	} `json:"additionalInfo"`
@@ -150,9 +150,9 @@ type Callback struct {
 // InitService to create canoput service
 type InitService struct {
 	Type        string // snap | api
-	MerchantKey []byte
-	MerchantPem []byte
-	MerchantID  string
-	Secret      string
+	MerchantKey []byte `validate:"required"`
+	MerchantPem []byte `validate:"required"`
+	MerchantID  string `validate:"required"`
+	Secret      string `validate:"required"`
 	TimeOut     time.Duration
 }
